@@ -1,7 +1,7 @@
 from Node import Node, add_to_open
 
 # Best-first search
-def best_first_search(maze, start, end):
+def Best_First_Search(maze, start, end):
     
     # Cria lista dos nós abertos e dos nós fechados
     open = []
@@ -70,7 +70,7 @@ def best_first_search(maze, start, end):
     # Return None, se nenhum caminho foi encontrado
     return None
 
-def visit(maze, current_node, goal_node, visited, height, width):
+def visit(maze, current_node, goal_node, visited):
     
     visited.append(current_node)
     
@@ -79,11 +79,11 @@ def visit(maze, current_node, goal_node, visited, height, width):
     
     if(x != 0 ):
         neighbors.append((x-1,y))
-    if(x < height-1 ):
+    if(x < maze['height']-1 ):
         neighbors.append((x+1,y))
     if(y != 0 ):
         neighbors.append((x,y-1))
-    if(y < width-1 ):
+    if(y < maze['width']-1 ):
         neighbors.append((x,y+1))
     
     for i in neighbors:
@@ -100,22 +100,94 @@ def visit(maze, current_node, goal_node, visited, height, width):
         if(neighbor == goal_node):
             return neighbor
         
-        temp = visit(maze, neighbor, goal_node, visited, height, width)
+        temp = visit(maze, neighbor, goal_node, visited)
         if temp is not None:
             return temp
     
     return None
 
-def DFS(maze, start, end, height, width):
+def Depth_First_Search(maze, start, end):
     
     visited = []
     
     start_node = Node(start, None)
     goal_node = Node(end, None)
-    goal_node = visit(maze, start_node, goal_node, visited, height, width)
+    goal_node = visit(maze, start_node, goal_node, visited)
     
     path = []
     while goal_node != start_node:
         path.append(goal_node.position)
         goal_node = goal_node.parent
     return path[::-1]
+
+def Breadth_First_Search(maze, start, end):
+    # Cria lista dos nós abertos e dos nós fechados
+    open = []
+    closed = []
+    neighbors = []
+
+    # Cria um nó inicial e um nó objetivo
+    start_node = Node(start, None)
+    goal_node = Node(end, None)
+
+    # Checa se o objetivo foi atingido
+    if start_node == goal_node:
+        path = [start_node]
+        return path
+
+
+    # Adiciona o nó incial na lista de abertos
+    open.append(start_node)
+    
+    # Loop até que a lista de abertos esteja vazia
+    while len(open) > 0:
+
+        # Pega o nó com menor custo que se encontra no inicio
+        current_node = open.pop(0)
+
+        # Adiciona o nó na lista de fechados
+        closed.append(current_node)
+        
+        # Pega a posicao do nó no labirinto
+        (x, y) = current_node.position
+        
+        # Obtem os vizinhos do nó
+        if(x > 0 ):
+            neighbors.append((x-1,y))
+        if(x < maze['height']-1 ):
+            neighbors.append((x+1,y))
+        if(y > 0 ):
+            neighbors.append((x,y-1))
+        if(y < maze['width']-1 ):
+            neighbors.append((x,y+1))
+
+        # Loop entre os vizinho para obter proximo nó
+        for i in neighbors:
+
+            # Pega o char do labirinto
+            maze_value = maze.get(i)
+
+            # Caso for uma parede, ir para proxima iteração
+            if(maze_value == '-'):
+                continue
+
+            # Cria um nó do vizinho
+            neighbor = Node(i, current_node)
+
+            # Se o vizinho ja foi visitado, ir para proxima iteracao
+            if(neighbor in closed):
+                continue
+            
+            if neighbor == goal_node:
+                path = []
+                while neighbor != start_node:
+                    path.append(neighbor.position)
+                    neighbor = neighbor.parent
+                return path[::-1]
+
+            open.append(neighbor)
+        
+        neighbors.clear()
+
+    # Return None, se nenhum caminho foi encontrado
+    return None

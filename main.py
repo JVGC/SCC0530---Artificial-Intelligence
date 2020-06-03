@@ -3,7 +3,7 @@
 #	ex: entrada.txt 
 # Saida do programa: posicoes percorridas e numero de passos
 #
-from Search import best_first_search, DFS
+from Search import Best_First_Search, Depth_First_Search, Breadth_First_Search
 
 # Checa se um vizinho deve ser adicionado na lista de abertos
 
@@ -46,17 +46,28 @@ while len(chars) > 0:
 # Fecha o arquivo após uso 
 fp.close()
 
+maze['height'] = int(height)
+maze['width'] = int(width)
+
 # Encontra o menor caminho a partir de '#', indo até '$'
-path = best_first_search(maze, start, end)
-print('Best_first Search')
+path = Best_First_Search(maze, start, end)
+print('\nBest_First_Search\n')
 print('Posições percorridas: ')
 print(path)
 print()
 print('Passos até o objetivo: {0}'.format(len(path)))
 print()
-path = DFS(maze, start, end, int(height), int(width))
 
-print('DFS')
+path = Depth_First_Search(maze, start, end)
+print('Depth_First_Search\n')
+print('Posições percorridas: ')
+print(path)
+print()
+print('Passos até o objetivo: {0}'.format(len(path)))
+print()
+
+path = Breadth_First_Search(maze, start, end)
+print('Breadth_First_Search\n')
 print('Posições percorridas: ')
 print(path)
 print()
