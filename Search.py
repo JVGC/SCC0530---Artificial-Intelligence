@@ -71,7 +71,6 @@ def Best_First_Search(maze, start, end):
     return None
 
 def visit(maze, current_node, goal_node, visited):
-    
     visited.append(current_node)
     
     x, y = current_node.position
@@ -106,9 +105,9 @@ def visit(maze, current_node, goal_node, visited):
     
     return None
 
-def Depth_First_Search(maze, start, end):
+def Depth_First_Search(maze, start, end, v=[]):
     
-    visited = []
+    visited = list(v)
     
     start_node = Node(start, None)
     goal_node = Node(end, None)
@@ -191,3 +190,91 @@ def Breadth_First_Search(maze, start, end):
 
     # Return None, se nenhum caminho foi encontrado
     return None
+
+def astar_search(map, start, end):
+    
+    # Create lists for open nodes and closed nodes
+    open = []
+    closed = []
+
+    # Create a start node and an goal node
+    start_node = Node(start, None)
+    goal_node = Node(end, None)
+
+    # Add the start node
+    open.append(start_node)
+    
+    # Loop until the open list is empty
+    while len(open) > 0:
+
+        # Sort the open list to get the node with the lowest cost first
+        open.sort()
+
+        # Get the node with the lowest cost
+        current_node = open.pop(0)
+
+        # Add the current node to the closed list
+        closed.append(current_node)
+        
+        # Check if we have reached the goal, return the path
+        if current_node == goal_node:
+            path = []
+            while current_node != start_node:
+                path.append(current_node.position)
+                current_node = current_node.parent
+            #path.append(start) 
+            # Return reversed path
+            return path[::-1]
+
+        # Unzip the current node position
+        (x, y) = current_node.position
+
+        # Get neighbors
+        neighbors = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
+
+        # Loop neighbors
+        for next in neighbors:
+
+            # Get value from map
+            map_value = map.get(next)
+
+            # Check if the node is a wall
+            if(map_value == '-'):
+                continue
+
+            # Create a neighbor node
+            neighbor = Node(next, current_node)
+
+            # Check if the neighbor is in the closed list
+            if(neighbor in closed):
+                continue
+
+            # Generate heuristics (Manhattan distance)
+            neighbor.g = abs(neighbor.position[0] - start_node.position[0]) + abs(neighbor.position[1] - start_node.position[1])
+            neighbor.h = abs(neighbor.position[0] - goal_node.position[0]) + abs(neighbor.position[1] - goal_node.position[1])
+            neighbor.f = neighbor.g + neighbor.h
+
+            # Check if neighbor is in open list and if it has a lower f value
+            if(add_to_open(open, neighbor)):
+                # Everything is green, add neighbor to open list
+                open.append(neighbor)
+
+    # Return None, no path is found
+    return None
+
+def simple_hill_climbing(maze, start, end):
+
+    current_path = Depth_First_Search(maze, start, end, [])
+
+    if current_path != None:
+        while 1:
+            new_path = []
+            for n in current_path[1:-1]:
+                new_path = Depth_First_Search(maze, start, end, v=[Node(n, None)])
+
+                if new_path != None and len(new_path) < len(current_path):
+                    current_path = new_path
+                    break
+            else:
+                break
+    return current_path

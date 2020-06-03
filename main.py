@@ -3,7 +3,7 @@
 #	ex: entrada.txt 
 # Saida do programa: posicoes percorridas e numero de passos
 #
-from Search import Best_First_Search, Depth_First_Search, Breadth_First_Search
+from Search import Best_First_Search, Depth_First_Search, Breadth_First_Search, astar_search, simple_hill_climbing
 
 # Checa se um vizinho deve ser adicionado na lista de abertos
 
@@ -73,3 +73,15 @@ print(path)
 print()
 print('Passos até o objetivo: {0}'.format(len(path)))
 print()
+
+print('Busca A*')
+path = astar_search(maze, start, end)
+print('Posições percorridas: ')
+print(path, end='\n\n')
+print('Passos até o objetivo: {0}'.format(len(path)), end='\n\n')
+
+print('Simple Hill Climbing')
+path = simple_hill_climbing(maze, start, end)
+print('Posições percorridas: ')
+print(path, end='\n\n')
+print('Passos até o objetivo: {0}'.format(len(path)), end='\n\n')
