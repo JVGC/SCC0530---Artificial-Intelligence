@@ -1,87 +1,79 @@
-# Usage: python3 trab3.py
-# Entrada do programa: nome do arquivo
-#	ex: entrada.txt 
-# Saida do programa: posicoes percorridas e numero de passos
-#
-from Search import Best_First_Search, Depth_First_Search, Breadth_First_Search, astar_search, simple_hill_climbing
+'''
+Usage: python3 main.py
 
-# Checa se um vizinho deve ser adicionado na lista de abertos
+Input: name of file with the information of the maze, ex: input.txt
+
+Output: Path found and number of steps for each of the algorithms
+'''
+
+from Search import best_first_search, depth_first_search, breadth_first_search, astar_search, simple_hill_climbing
 
 maze = {}
-# Adiciona um caracter qualquer para iniciar o loop
-chars = ['c']
 start = None
 end = None
-heightMaze = 0
 fileName = input("Digite o nome do arquivo: ")
 
-# Abre o arquivo
-fp = open(fileName, 'r')
+with open(fileName, 'r') as fp:
+    line = fp.readlines()
+    height, width = [int(x) for x in line[0].split()]
+    line = line[1:]
+    for i, l in enumerate(line):
+        for j, c in enumerate(l):
+            if c == '\n':
+                continue
+            elif c == '#':
+                start = (i, j)
+            elif c == '$':
+                end = (i, j)
 
-# Faz a leitura do comeco do arquivo pegando altura e largura
-height = fp.read(2)
-fp.read(1) 
-width = fp.read(2)
-# Uma leitura a mais para pegar o '\n' no arquivo
-fp.readline()
+            maze[(i, j)] = c 
 
-while len(chars) > 0:
-    # Pega os caracteres de uma linha do arquivo
-    chars = [str(i) for i in fp.readline().strip()]
+maze['height'] = height
+maze['width'] = width
 
-    # Adiciona os caracteres no maze
-    for x in range(len(chars)):
-        maze[(heightMaze, x)] = chars[x]
-        # Caso for o ponto de partida, adiciona no start
-        if(chars[x] == '#'):
-            start = (heightMaze, x)
-        # Caso for o ponto de chegada, adiciona no end
-        elif(chars[x] == '$'):
-            end = (heightMaze, x)
+########### Algoritmos ###########
 
-    # Incrementa a altura da matriz na leitura
-    if(len(chars) > 0):
-        heightMaze += 1
+path = best_first_search(maze, start, end)
+print('\nBest_First_Search')
+if path != None:
+    print('Posições percorridas: ')
+    print(path, end='\n\n')
+    print('Passos até o objetivo: {0}\n'.format(len(path)))
+else:
+    print('Nenhum caminho encontrado')
 
-# Fecha o arquivo após uso 
-fp.close()
-
-maze['height'] = int(height)
-maze['width'] = int(width)
-
-# Encontra o menor caminho a partir de '#', indo até '$'
-path = Best_First_Search(maze, start, end)
-print('\nBest_First_Search\n')
-print('Posições percorridas: ')
-print(path)
-print()
-print('Passos até o objetivo: {0}'.format(len(path)))
-print()
-
-path = Depth_First_Search(maze, start, end)
-print('Depth_First_Search\n')
-print('Posições percorridas: ')
-print(path)
-print()
-print('Passos até o objetivo: {0}'.format(len(path)))
-print()
-
-path = Breadth_First_Search(maze, start, end)
-print('Breadth_First_Search\n')
-print('Posições percorridas: ')
-print(path)
-print()
-print('Passos até o objetivo: {0}'.format(len(path)))
-print()
-
-print('Busca A*')
+path = depth_first_search(maze, start, end)
+print('Depth_First_Search')
+if path != None:
+    print('Posições percorridas: ')
+    print(path, end='\n\n')
+    print('Passos até o objetivo: {0}\n'.format(len(path)))
+else:
+    print('Nenhum caminho encontrado')
+    
+path = breadth_first_search(maze, start, end)
+print('Breadth_First_Search')
+if path != None:
+    print('Posições percorridas: ')
+    print(path, end='\n\n')
+    print('Passos até o objetivo: {0}\n'.format(len(path)))
+else:
+    print('Nenhum caminho encontrado')
+    
 path = astar_search(maze, start, end)
-print('Posições percorridas: ')
-print(path, end='\n\n')
-print('Passos até o objetivo: {0}'.format(len(path)), end='\n\n')
-
-print('Simple Hill Climbing')
+print('Busca A*')
+if path != None:
+    print('Posições percorridas: ')
+    print(path, end='\n\n')
+    print('Passos até o objetivo: {0}\n'.format(len(path)), end='\n\n')
+else:
+    print('Nenhum caminho encontrado')
+    
 path = simple_hill_climbing(maze, start, end)
-print('Posições percorridas: ')
-print(path, end='\n\n')
-print('Passos até o objetivo: {0}'.format(len(path)), end='\n\n')
+print('Simple Hill Climbing')
+if path != None:
+    print('Posições percorridas: ')
+    print(path, end='\n\n')
+    print('Passos até o objetivo: {0}'.format(len(path)), end='\n\n')
+else:
+    print('Nenhum caminho encontrado')
