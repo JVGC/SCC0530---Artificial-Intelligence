@@ -1,8 +1,8 @@
 from Block import Block, check_block
 
-def best_first_search(maze, start_pos, end_pos):   
+def best_first_search(maze, start_pos, end_pos, v=[]):   
     valids = [] # Can be visited
-    closed = [] # Already visited
+    closed = list(v) # Already visited
 
     start = Block(start_pos)
     goal = Block(end_pos)
@@ -88,9 +88,9 @@ def visit(maze, current, goal, visited):
     
     return None
 
-def depth_first_search(maze, start_pos, end_pos, v=[]):
+def depth_first_search(maze, start_pos, end_pos):
     
-    visited = list(v)
+    visited = []
     
     start = Block(start_pos)
     goal = Block(end_pos)
@@ -103,9 +103,9 @@ def depth_first_search(maze, start_pos, end_pos, v=[]):
         goal = goal.parent
     return path[::-1] # Reverse to print in correct order
 
-def breadth_first_search(maze, start_pos, end_pos):
+def breadth_first_search(maze, start_pos, end_pos, v=[]):
     valids = []
-    closed = []
+    closed = list(v)
     neighbors = []
 
     start = Block(start_pos)
@@ -212,7 +212,7 @@ def astar_search(maze, start_pos, end_pos):
     return None # No path found
 
 def simple_hill_climbing(maze, start, end):
-    current_path = depth_first_search(maze, start, end) # Find initial solution
+    current_path = best_first_search(maze, start, end) # Find initial solution
 
     if current_path != None: 
         # Optimize path found
@@ -220,7 +220,7 @@ def simple_hill_climbing(maze, start, end):
             new_path = []
             # Test different paths
             for n in current_path[1:-1]:
-                new_path = depth_first_search(maze, start, end, v=[Block(n)])
+                new_path = best_first_search(maze, start, end, v=[Block(n)])
                 if new_path != None and len(new_path) < len(current_path):
                     current_path = new_path
                     break

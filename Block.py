@@ -1,5 +1,5 @@
 class Block:
-    def __init__(self, position, parent=()):
+    def __init__(self, position, parent=None):
         self.position = position
         self.parent = parent
         self.distance_start = 0 
