@@ -103,7 +103,7 @@ def depth_first_search(maze, start_pos, end_pos, v=[]):
         goal = goal.parent
     return path[::-1] # Reverse to print in correct order
 
-def breadth_birst_search(maze, start_pos, end_pos):
+def breadth_first_search(maze, start_pos, end_pos):
     valids = []
     closed = []
     neighbors = []
@@ -212,7 +212,7 @@ def astar_search(maze, start_pos, end_pos):
     return None # No path found
 
 def simple_hill_climbing(maze, start, end):
-    current_path = Depth_First_Search(maze, start, end) # Find initial solution
+    current_path = depth_first_search(maze, start, end) # Find initial solution
 
     if current_path != None: 
         # Optimize path found
@@ -220,7 +220,7 @@ def simple_hill_climbing(maze, start, end):
             new_path = []
             # Test different paths
             for n in current_path[1:-1]:
-                new_path = Depth_First_Search(maze, start, end, v=[Block(n)])
+                new_path = depth_first_search(maze, start, end, v=[Block(n)])
                 if new_path != None and len(new_path) < len(current_path):
                     current_path = new_path
                     break
